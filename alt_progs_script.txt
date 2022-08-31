@@ -1,0 +1,292 @@
+﻿// to activate, watch list the player and put "risky", "balanced", or "steady" in the player note (must be lowercase). If you want a player watch listed but not using the progs, type in "classic" (must also be lowercase)
+
+
+var players = await bbgm.idb.cache.players.getAll();
+for (const p of players) {
+    if (p.ratings.length > 1 && p.watch && p.note != "classic") {  
+        p.ratings.pop();  
+        bbgm.player.addRatingsRow(p);
+        const ratings = p.ratings.at(-1);
+        const age = bbgm.g.get("season") - p.born.year;
+var per = -16;
+//get per
+for(let i = p.stats.length - 1; i >= 0; i --)
+{
+if (p.stats[i].season === bbgm.g.get("season") - 1 && p.stats[i].playoffs === false)
+{
+per = p.stats[i].per;
+}
+}
+      
+if (per === -16)
+{
+per = Math.floor(Math.random() * 26 + 10);
+}
+
+
+        
+        //Define Progs
+        let progRange = [0, 0];
+        let hgtRange = [0, 0];
+        let trainRange = [0,0];
+
+
+        if (Math.floor(Math.random() * 30) + 1 < 29 && p.ratings.at(-1).ovr > 45 || Math.floor(Math.random() * 30) + 1 < 27 && p.ratings.at(-1).ovr <= 45)
+{
+if (p.note === "balanced")
+{
+        if (age <= 19)
+        {
+  progRange = [-2,5];
+        }
+else if (age <= 21)
+        {
+progRange = [-6,10];
+        }
+else if (age <= 26) 
+        {
+            progRange = [(per/7 - 4), (per/6.0 + 1)];
+        }
+else if (age < 31)
+        {
+            progRange = [(per/7 - 6) , (per/6.0)];
+        }
+else if (age <= 35)
+        {
+            progRange = [(per/6.5 - 7) , (per/6.5 - 2.5)];
+        }
+else 
+        {
+if (per >= 40)
+{
+progRange = [(per/6 - 10) , (per/7 - 5)];
+}
+else
+{
+progRange = [(per/6 - 9) , (per/7 - 4)];
+}
+       }
+}
+else if (p.note === "risky")
+{
+if (age <= 19)
+        {
+  progRange = [-4,8];
+        }
+else if (age <= 21)
+        {
+progRange = [-11,19];
+        }
+else if (age <= 26) 
+        {
+            progRange = [((1.5* (per/6.5 - 5)) - 1.5), ((1.5 * (per/6.5 + 1)) + 1)];
+        }
+else if (age < 31)
+        {
+            progRange = [((1.5 * (per/7 - 6)) - 1.5), (1.5 * (per/6.5)) - 1];
+        }
+else if (age <= 35)
+        {
+if (p.ratings.at(-1).ovr >= 85)
+{
+            progRange = [1.5 * (per/6.5 - 7.5) , 1.5 * (per/6.5 - 2.5)];
+}
+else
+{
+progRange = [1.5 * (per/6.5 - 6.5) , 1.5 * (per/6.5 - 2.5)];
+}
+        }
+else 
+        {
+if (per >= 40)
+{
+progRange = [(per/6 - 10) , (per/7 - 5)];
+}
+else
+{
+if (per >= 40)
+{
+progRange = [(per/6 - 10) , (per/7 - 5)];
+}
+else
+{
+progRange = [(per/6 - 9) , (per/7 - 4)];
+}
+}
+       }
+}
+else if (p.note === "steady")
+{
+if (age <= 19)
+        {
+  progRange = [-1,3];
+        }
+else if (age <= 21)
+        {
+progRange = [-3,7];
+        }
+else if (age <= 26) 
+        {
+            progRange = [0.75 * (per/6.5 - 4), (per/6 + 1) * 0.75 + 0.5];
+        }
+else if (age < 31)
+        {
+            progRange = [0.75 * (per/7.0 - 6) , (per/6.5) * 0.75];
+        }
+else if (age <= 35)
+        {
+if (p.ratings.at(-1).ovr >= 85)
+{
+            progRange = [0.75 *(per/6.5 - 9) , 0.75 * (per/6.5 - 3.5)];
+}
+else
+{
+progRange = [0.75 *(per/6.5 - 7) , 0.75 * (per/6.5 - 2.5)];
+} 
+        }
+else 
+        {
+if (per >= 40)
+{
+progRange = [(per/6 - 10) , (per/7 - 5)];
+}
+else
+{
+progRange = [(per/6 - 9) , (per/7 - 4)];
+}
+       }
+}
+}
+// God Progs/Fall off
+else
+{
+if (Math.floor((Math.random() * 100) + 1) <= 90)
+{
+if (age <= 30)
+{
+progRange = [1,18];
+customNotification(p.pid, "received God progs");
+}
+else
+{
+progRange = [2,10];
+customNotification(p.pid, "received God progs");
+}
+}
+else
+{
+if (age > 30)
+{
+progRange = [-13, 4];
+customNotification(p.pid, "fell off hard");
+}
+else
+{
+progRange = [-10, 2];
+customNotification(p.pid, "fell off hard");
+}
+
+
+}
+}
+
+
+// height progs
+if (Math.floor(Math.random()*9 + 1) > Math.ceil((age/3)))
+{
+if (age <= 17)
+{
+hgtRange = [2,3];
+customNotification(p.pid, "grew");
+}
+else
+{
+hgtRange = [1,2];
+customNotification(p.pid, "grew");
+}
+}
+else
+{
+hgtRange = [0,0];
+}
+
+
+
+
+// physical progs
+if (Math.floor(Math.random() * 33) + 1 < 32)
+{
+if (p.ratings.at(-1).skills[0] != "A")
+{
+trainRange = [((29-age)/1.7) - 4, ((30-age)/5.0) + 4.5];
+}
+else
+{
+trainRange = [((31-age)/1.8) - 4, ((32-age)/5.0) + 4.5];
+}
+}
+else
+{
+if (Math.floor(Math.random() * 20) + 1 < 11)
+{
+trainRange = [-3,14];
+customNotification(p.pid, "saw great physical improvement");
+}
+else
+{
+trainRange = [-11,3];
+customNotification(p.pid, "got obese");
+}
+}
+
+
+
+
+  //Apply progs      
+const keys = ["diq","dnk","drb","fg","ft","ins","oiq","pss","reb","tp"];
+const locks = ["hgt"];
+const doors = ["jmp", "spd", "stre", "endu"];
+         
+        for (const key of keys) {
+            const prog = bbgm.random.randInt(...progRange);
+            ratings[key] = bbgm.player.limitRating(ratings[key] + prog);
+        }
+
+
+for (const lock of locks) {
+            const grow = bbgm.random.randInt(...hgtRange);
+            ratings[lock] = bbgm.player.limitRating(ratings[lock] + grow);
+        }
+
+
+for (const door of doors) {
+            const train = bbgm.random.randInt(...trainRange);
+            ratings[door] = bbgm.player.limitRating(ratings[door] + train);
+        }
+
+
+
+
+        await bbgm.player.develop(p, 0);
+        await bbgm.player.updateValues(p);
+        await bbgm.idb.cache.players.put(p);
+    }
+async function customNotification(pid, reason) {
+    const p = await bbgm.idb.cache.players.get(pid);
+    const tid = p.tid;   
+    await bbgm.idb.cache.players.put(p);
+    bbgm.logEvent(
+        {
+            type: "progs",
+            text: `<a href="${bbgm.helpers.leagueUrl(["player", p.pid])}">${p.firstName} ${
+                p.lastName
+            }</a> ${reason}.`,
+            showNotification: true,
+            pids: [p.pid],
+            tids: [tid],
+            persistent: false,
+            score: 20,
+        },
+    );
+}
+}

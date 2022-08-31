@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "load-json-file": "^7.0.1"
+  },
+    "type": "module"
+}

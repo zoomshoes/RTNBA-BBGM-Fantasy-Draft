@@ -1,0 +1,54 @@
+var players = await bbgm.idb.cache.players.getAll();
+for (const p of players) {
+    if (p.ratings.length > 1) {
+        // Delete latest ratings
+        p.ratings.pop();
+
+        // Start from ratings from last year
+        bbgm.player.addRatingsRow(p);
+        const ratings = p.ratings.at(-1);
+
+        // Min and max prog, by age
+        
+        const age = bbgm.g.get("season") - p.born.year;
+        let progRange = [0, 0];
+        {
+
+    if (age <= 19)
+            {
+    progRange = [-3,8];
+            }
+    else if (age <= 21)
+            {
+    progRange = [-4,10];
+            }
+    else if (age <= 26) 
+            {
+    progRange = [-5,8];
+            }
+    else if (age <= 31)
+            {
+    progRange = [-6,3];
+            }
+    else if (age <= 35)
+            {
+    progRange = [-6,1];
+            }
+    else if (age >35)
+            {
+    progRange = [-8,1];
+            }
+
+        const keys = ["diq","dnk","drb","endu","fg","ft","ins","jmp","oiq","pss","reb","spd","stre","tp"];
+
+        for (const key of keys) {
+            const prog = bbgm.random.randInt(...progRange);
+            ratings[key] = bbgm.player.limitRating(ratings[key] + prog);
+        }
+
+        await bbgm.player.develop(p, 0);
+        await bbgm.player.updateValues(p);
+        await bbgm.idb.cache.players.put(p);
+    }
+}
+}
