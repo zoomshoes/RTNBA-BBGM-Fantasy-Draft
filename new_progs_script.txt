@@ -1,54 +1,53 @@
 var players = await bbgm.idb.cache.players.getAll();
-for (const p of players) {
+for (const p of players)
+{
     if (p.ratings.length > 1) {
-        // Delete latest ratings
         p.ratings.pop();
-
-        // Start from ratings from last year
         bbgm.player.addRatingsRow(p);
-        const ratings = p.ratings.at(-1);
-
-        // Min and max prog, by age
-        
-        const age = bbgm.g.get("season") - p.born.year;
-        let progRange = [0, 0];
-        {
+const ratings = p.ratings.at(-1);
+const age = bbgm.g.get("season") - p.born.year;
+let progRange = [0,0]; {
 
     if (age <= 19)
-            {
-    progRange = [-3,8];
-            }
+        {
+    progRange = [-7,15];
+        }
     else if (age <= 21)
-            {
-    progRange = [-4,10];
-            }
+        {
+    progRange = [-5,18];
+        }
     else if (age <= 26) 
-            {
-    progRange = [-5,8];
-            }
+        {
+    progRange = [-7,16];
+        }
     else if (age <= 31)
-            {
-    progRange = [-6,3];
-            }
+        {
+    progRange = [-9,10];
+        }
     else if (age <= 35)
-            {
-    progRange = [-6,1];
-            }
+        {
+    progRange = [-10,4];
+        }
     else if (age >35)
-            {
-    progRange = [-8,1];
-            }
-
-        const keys = ["diq","dnk","drb","endu","fg","ft","ins","jmp","oiq","pss","reb","spd","stre","tp"];
-
-        for (const key of keys) {
-            const prog = bbgm.random.randInt(...progRange);
-            ratings[key] = bbgm.player.limitRating(ratings[key] + prog);
+        {
+    progRange = [-11,3];
         }
 
-        await bbgm.player.develop(p, 0);
-        await bbgm.player.updateValues(p);
-        await bbgm.idb.cache.players.put(p);
-    }
+const keys = ["diq","dnk","drb","endu","fg","ft","ins","jmp","oiq","pss","reb","spd","stre","tp"];
+
+for (const key of keys)
+        {
+        const prog = bbgm.random.randInt(...progRange);
+        ratings[key] = bbgm.player.limitRating(ratings[key] + prog);
+        }
+
+await bbgm.player.develop(p, 0);
+await bbgm.player.updateValues(p);
+await bbgm.idb.cache.players.put(p);
 }
 }
+}
+
+// High Phys = 80
+// Med Phys = 50
+// Low Phys = 25
