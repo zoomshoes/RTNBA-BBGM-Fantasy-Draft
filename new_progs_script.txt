@@ -8,38 +8,46 @@ const ratings = p.ratings.at(-1);
 const age = bbgm.g.get("season") - p.born.year;
 let progRange = [0,0]; {
 
-    if (age <= 19)
+    if (age <= 22)
         {
-    progRange = [-7,15];
-        }
-    else if (age <= 21)
-        {
-    progRange = [-5,18];
+    progRange = [-4,8];
         }
     else if (age <= 26) 
         {
-    progRange = [-7,16];
+    progRange = [-4,9];
+        }
+    else if (age <= 29)
+        {
+    progRange = [-4,6];
         }
     else if (age <= 31)
         {
-    progRange = [-9,10];
+    progRange = [-5,4];
         }
     else if (age <= 35)
         {
-    progRange = [-10,4];
+    progRange = [-6,1];
         }
-    else if (age >35)
+    else if (age <= 37)
         {
-    progRange = [-11,3];
+    progRange = [-7,1];
+        }
+    else if (age <= 39)
+        {
+    progRange = [-8,0];
+        }
+    else if (age > 39)
+        {
+    progRange = [-10,-1];
         }
 
 const keys = ["diq","dnk","drb","endu","fg","ft","ins","jmp","oiq","pss","reb","spd","stre","tp"];
 
 for (const key of keys)
-        {
-        const prog = bbgm.random.randInt(...progRange);
-        ratings[key] = bbgm.player.limitRating(ratings[key] + prog);
-        }
+    {
+    const prog = bbgm.random.randInt(...progRange);
+    ratings[key] = bbgm.player.limitRating(ratings[key] + prog);
+    }
 
 await bbgm.player.develop(p, 0);
 await bbgm.player.updateValues(p);
@@ -47,7 +55,3 @@ await bbgm.idb.cache.players.put(p);
 }
 }
 }
-
-// High Phys = 80
-// Med Phys = 50
-// Low Phys = 25
